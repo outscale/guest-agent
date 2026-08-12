@@ -1,0 +1,31 @@
+[Unit]
+Description=OUTSCALE Guest Agent
+Documentation=https://github.com/outscale/guest-agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/guest-agent
+Restart=on-failure
+RestartSec=2
+# STATE_DIRECTORY=/var/lib/guest-agent  CONFIGURATION_DIRECTORY=/etc/guest-agent
+StateDirectory=guest-agent
+StateDirectoryMode=0700
+ConfigurationDirectory=guest-agent
+ConfigurationDirectoryMode=0755
+
+Environment=RUST_LOG=info
+# Keys and sockets only need process-local state; no ambient privileges yet.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

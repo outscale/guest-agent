@@ -1,0 +1,4 @@
+target/
+*.deb
+*.rpm
+guest-agent/.rpm/*.tar.gz

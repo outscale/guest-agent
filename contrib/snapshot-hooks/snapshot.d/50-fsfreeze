@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# FIFREEZE on the filesystem mounted from MOUNT_POINT (block device).
+set -euo pipefail
+HOOK_ROOT=$(cd "$(dirname "$0")/.." && pwd)
+# shellcheck source=../lib.sh
+source "$HOOK_ROOT/lib.sh"
+
+PHASE=begin
+resolve_mount_and_pod
+fs_freeze

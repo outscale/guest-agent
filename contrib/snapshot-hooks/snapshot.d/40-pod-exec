@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Run pod begin-command annotation before freeze.
+# Annotation (on Pod): snapshot.outscale.com/begin-command = JSON argv array
+# Optional: snapshot.outscale.com/container = container name
+set -euo pipefail
+HOOK_ROOT=$(cd "$(dirname "$0")/.." && pwd)
+# shellcheck source=../lib.sh
+source "$HOOK_ROOT/lib.sh"
+
+PHASE=begin
+resolve_mount_and_pod
+pod_exec_annotation "$ANN_BEGIN"
