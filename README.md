@@ -92,7 +92,7 @@ Examples ship in `contrib/snapshot-hooks/`.
 
 **guest-agent** is released under the BSD 3-Clause license.
 
-© 2025 Outscale SAS
+© 2026 Outscale SAS
 
 See [LICENSE](./LICENSE) for full details.
 

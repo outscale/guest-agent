@@ -15,10 +15,10 @@
 
 export CONTAINER_RUNTIME_ENDPOINT="${CONTAINER_RUNTIME_ENDPOINT:-unix:///run/containerd/containerd.sock}"
 
-ANN_BEGIN='snapshot.outscale.com/begin-command'
-ANN_COMMIT='snapshot.outscale.com/commit-command'
-ANN_COMPLETED='snapshot.outscale.com/completed-command'
-ANN_CONTAINER='snapshot.outscale.com/container'
+ANN_BEGIN='snapshot.bsu.csi.outscale.com/begin-command'
+ANN_COMMIT='snapshot.bsu.csi.outscale.com/commit-command'
+ANN_COMPLETED='snapshot.bsu.csi.outscale.com/completed-command'
+ANN_CONTAINER='snapshot.bsu.csi.outscale.com/container'
 
 log() { echo "snapshot-hook[${PHASE}]: $*" >&2; }
 

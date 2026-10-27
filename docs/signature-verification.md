@@ -17,7 +17,7 @@ the `.deb` / `.rpm` packages:
 
 The signature uses the Sigstore infrastructure:
 
-- **Fulcio** for certificate issuance (OIDC-based short-lived certificates)
+- **Fulcio** for issuing short-lived certificates based on OIDC identities.
 - **Rekor** for transparency log entries
 - **GitHub Actions OIDC** for identity verification
 

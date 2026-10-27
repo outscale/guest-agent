@@ -17,12 +17,12 @@
 
 Each hook is executed with the following environment variables:
  - `PHASE`: The hook's phase (begin/commit/completed).
- - `VOLUME_ID`: The volume's identifier (e.g., "vol-123456").
- - `SNAPSHOT_ID`: The snapshot identifier (e.g., "snap-789012ab").
+ - `VOLUME_ID`: The volume's IaaS identifier (e.g., "vol-123456").
+ - `SNAPSHOT_ID`: The snapshot's IaaS identifier (e.g., "snap-789012ab").
  - `MOUNT_POINT`: The mount point of the snapshot (e.g., "/dev/xvdb").
 
-Each hook is executed once for every snapshot created in the group. if hooks interact with a expternal process (e.g., a database), it must implement idempotentcy if required. the total execution time of all hooks in the group must not excide 30s. Hooks that exceed this limit will be terminated with SIGKILL.
+Each hook is executed once per snapshot created in the group. If a hook interacts with an external process (e.g., a database), it must be idempotent where necessary. The total execution time of all hooks in the group must not exceed 30 seconds. Hooks that exceed this limit will be terminated with a SIGKILL signal.
 
 ## Exit Codes
 
-Hooks should return exit code 0 for success. Non-zero exit codes will cause the snapshot operation to be consideer `crash-consistant`, and the error will be logged.
+Hooks should return exit code 0 for success. Non-zero exit codes will cause the snapshot operation to be considered `crash-consistent`, and the error will be logged.
