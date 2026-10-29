@@ -1,0 +1,23 @@
+[package]
+name = "guest-agent-macros"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Proc-macros for OUTSCALE guest-agent JSON-RPC methods"
+publish = false
+
+[lib]
+proc-macro = true
+
+[dependencies]
+heck = "0.5"
+proc-macro-crate = "3"
+proc-macro2 = "1"
+quote = "1"
+syn = { version = "2", features = ["full"] }
+
+[lints]
+workspace = true

@@ -1,0 +1,16 @@
+[package]
+name = "zmq"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Minimal ZMQ wrapper used by OUTSCALE guest-agent"
+publish = false
+
+[dependencies]
+zmq-sys = { path = "../zmq-sys" }
+
+[lints]
+workspace = true

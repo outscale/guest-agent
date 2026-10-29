@@ -1,0 +1,72 @@
+[package]
+name = "guest-agent"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "OUTSCALE Guest Agent"
+readme = "../README.md"
+categories = ["network-programming", "os"]
+keywords = ["outscale", "guest-agent"]
+
+[dependencies]
+guest-agent-macros = { path = "../guest-agent-macros" }
+zmq = { path = "../zmq" }
+inventory = "0.3.24"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = { version = "1.0.151", features = ["raw_value"] }
+log = "0.4"
+env_logger = "0.11"
+jiff = "0.2.37"
+systemd-journal-logger = "2.2.2"
+
+[package.metadata.deb]
+maintainer = "Outscale SAS <opensource@outscale.com>"
+copyright = "Outscale SAS"
+license-file = ["../LICENSE", "0"]
+section = "admin"
+priority = "optional"
+depends = ""
+assets = [
+    ["../LICENSE", "usr/share/doc/guest-agent/LICENSE", "644"],
+    ["../README.md", "usr/share/doc/guest-agent/README.md", "644"],
+    ["../contrib/snapshot-hooks/lib.sh", "etc/guest-agent/lib.sh", "644"],
+    ["../contrib/snapshot-hooks/snapshot-commit.d/40-pod-exec", "etc/guest-agent/snapshot-commit.d/40-pod-exec.disable", "755"],
+    ["../contrib/snapshot-hooks/snapshot-completed.d/40-pod-exec", "etc/guest-agent/snapshot-completed.d/40-pod-exec.disable", "755"],
+    ["../contrib/snapshot-hooks/snapshot-completed.d/50-fsfreeze", "etc/guest-agent/snapshot-completed.d/50-fsfreeze.disable", "755"],
+    ["../contrib/snapshot-hooks/snapshot.d/40-pod-exec", "etc/guest-agent/snapshot.d/40-pod-exec.disable", "755"],
+    ["../contrib/snapshot-hooks/snapshot.d/50-fsfreeze", "etc/guest-agent/snapshot.d/50-fsfreeze.disable", "755"],
+    ["target/release/guest-agent", "usr/bin/", "755"],
+]
+conf-files = [
+    "/etc/guest-agent/lib.sh",
+    "/etc/guest-agent/snapshot.d/40-pod-exec.disable",
+    "/etc/guest-agent/snapshot.d/50-fsfreeze.disable",
+    "/etc/guest-agent/snapshot-completed.d/50-fsfreeze.disable",
+    "/etc/guest-agent/snapshot-completed.d/90-pod-exec.disable",
+    "/etc/guest-agent/snapshot-commit.d/90-pod-exec.disable",
+]
+
+[package.metadata.deb.systemd-units]
+unit-scripts = "../contrib/systemd"
+unit-name = "guest-agent"
+enable = true
+
+[package.metadata.generate-rpm]
+assets = [
+    { source = "LICENSE", dest = "/usr/share/doc/guest-agent/LICENSE", mode = "644", doc = true },
+    { source = "README.md", dest = "/usr/share/doc/guest-agent/README.md", mode = "644", doc = true },
+    { source = "contrib/snapshot-hooks/lib.sh", dest = "/etc/guest-agent/lib.sh", mode = "644", config = "noreplace" },
+    { source = "contrib/snapshot-hooks/snapshot-commit.d/40-pod-exec", dest = "/etc/guest-agent/snapshot-commit.d/40-pod-exec.disable", mode = "755", config = "noreplace" },
+    { source = "contrib/snapshot-hooks/snapshot-completed.d/40-pod-exec", dest = "/etc/guest-agent/snapshot-completed.d/40-pod-exec.disable", mode = "755", config = "noreplace" },
+    { source = "contrib/snapshot-hooks/snapshot-completed.d/50-fsfreeze", dest = "/etc/guest-agent/snapshot-completed.d/50-fsfreeze.disable", mode = "755", config = "noreplace" },
+    { source = "contrib/snapshot-hooks/snapshot.d/40-pod-exec", dest = "/etc/guest-agent/snapshot.d/40-pod-exec.disable", mode = "755", config = "noreplace" },
+    { source = "contrib/snapshot-hooks/snapshot.d/50-fsfreeze", dest = "/etc/guest-agent/snapshot.d/50-fsfreeze.disable", mode = "755", config = "noreplace" },
+    { source = "contrib/systemd/guest-agent.service", dest = "/usr/lib/systemd/system/guest-agent.service", mode = "644" },
+    { source = "target/release/guest-agent", dest = "/usr/bin/guest-agent", mode = "755" },
+]
+
+[lints]
+workspace = true

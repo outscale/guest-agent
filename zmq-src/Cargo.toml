@@ -1,0 +1,16 @@
+[package]
+name = "zmq-src"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Build helper that vendors/compiles libzmq for guest-agent"
+publish = false
+
+[dependencies]
+cmake = "0.1"
+
+[lints]
+workspace = true

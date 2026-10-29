@@ -1,0 +1,19 @@
+[package]
+name = "zmq-sys"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Low-level libzmq bindings for OUTSCALE guest-agent"
+publish = false
+build = "build.rs"
+
+[build-dependencies]
+zmq-src = { path = "../zmq-src" }
+pkg-config = "*"
+bindgen = "0.71.0"
+
+[lints]
+workspace = true
