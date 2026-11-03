@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Run pod begin-command annotation before freeze.
-# Annotation (on Pod): snapshot.bsu.csi.outscale.com/begin-command = JSON argv array
+# Run pod completed-command annotation after the filesystem is thawed
+# (sorted after 50-fsfreeze, so the workload never resumes on a frozen fs).
+# Annotation (on Pod): snapshot.bsu.csi.outscale.com/completed-command = JSON argv array
 # Optional: snapshot.bsu.csi.outscale.com/container = container name
 set -euo pipefail
 HOOK_ROOT=$(cd "$(dirname "$0")/.." && pwd)
