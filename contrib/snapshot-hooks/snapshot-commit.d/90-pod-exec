@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Run pod begin-command annotation before freeze.
-# Annotation (on Pod): snapshot.bsu.csi.outscale.com/begin-command = JSON argv array
+# Run pod commit-command annotation.
+# The volume must stay quiet until the completed phase: do not resume writes
+# from this hook, do it from snapshot-completed.d instead.
+# Annotation (on Pod): snapshot.bsu.csi.outscale.com/commit-command = JSON argv array
 # Optional: snapshot.bsu.csi.outscale.com/container = container name
 set -euo pipefail
 HOOK_ROOT=$(cd "$(dirname "$0")/.." && pwd)

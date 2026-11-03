@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# FIFREEZE on the filesystem mounted from MOUNT_POINT (block device).
+# FITHAW (fsfreeze --unfreeze) on the filesystem mounted from MOUNT_POINT
+# (block device). Runs before 90-pod-exec so the workload resumes on a thawed fs.
 set -euo pipefail
 HOOK_ROOT=$(cd "$(dirname "$0")/.." && pwd)
 # shellcheck source=../lib.sh
