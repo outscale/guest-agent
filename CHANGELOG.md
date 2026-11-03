@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - (nothing yet)
 
 ### 📝 Documentation
-- (nothing yet)
+- `docs/hooks.md`: describe per-phase discovery, `MOUNT_POINT` (a block device),
+  the actual time limits and SIGKILL scope, and the shipped example hooks and
+  their order. Link it from the README.
 
 ### ⚰️ Deprecated
 - (nothing yet)
@@ -28,9 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### 🐛 Fixed
 - Example snapshot hooks: the pod `completed-command` now runs after the
-  filesystem thaw (`snapshot-completed.d/40-pod-exec` → `90-pod-exec`), instead
+  filesystem thaw (`snapshot-completed.d/40-pod-exec` --> `90-pod-exec`), instead
   of on a still-frozen filesystem. `snapshot-commit.d/40-pod-exec` is renamed to
-  `90-pod-exec` too, which also fixes the `.deb` conffiles that already pointed
+  `90-pod-exec` too, which also fixes the `.deb` conf files that already pointed
   to `90-pod-exec`. If you enabled the old `40-pod-exec` in these directories,
   rename it to `90-pod-exec`.
 

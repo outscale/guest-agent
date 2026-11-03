@@ -84,7 +84,8 @@ sudo systemctl enable --now guest-agent
 ```
 
 Snapshot hooks live under `/etc/guest-agent/` and follow `run-parts` naming.
-Examples ship in `contrib/snapshot-hooks/`.
+Examples ship in `contrib/snapshot-hooks/` (installed with a `.disable` suffix).
+See [docs/hooks.md](docs/hooks.md) for discovery, environment, time limits and ordering.
 
 ---
 
