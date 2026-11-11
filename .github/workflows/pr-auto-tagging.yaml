@@ -23,4 +23,4 @@ jobs:
         with:
           persist-credentials: false
       - name: 🔖 Tag PR
-        uses: outscale/.github/auto-tagging@95a82755abf72a78ac11b119da11d042e0152328 # v1.2.0
+        uses: outscale/.github/auto-tagging@3473e386226175ad703740601d34849b9b61364f # v1.4.0
