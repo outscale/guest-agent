@@ -13,7 +13,7 @@ build = "build.rs"
 [build-dependencies]
 zmq-src = { path = "../zmq-src" }
 pkg-config = "*"
-bindgen = "0.71.0"
+bindgen = "0.73.0"
 
 [lints]
 workspace = true
