@@ -1,4 +1,7 @@
-use std::sync::OnceLock;
+use std::sync::{
+    OnceLock,
+    atomic::{AtomicBool, Ordering},
+};
 
 use guest_agent::{
     rpc_models::{Request, Response, RpcError},
@@ -12,6 +15,7 @@ mod zmq_server;
 
 static SERVER_PUBLIC_KEY: OnceLock<String> = OnceLock::new();
 static HOST_PUBLIC_KEY: OnceLock<String> = OnceLock::new();
+static HANDSHAKE_DONE: AtomicBool = AtomicBool::new(false);
 
 #[derive(serde::Serialize)]
 struct HandshakeResponse {
@@ -33,6 +37,13 @@ fn get_pub_key(host_public_key: String, version: String) -> HandshakeResponse {
         warn!(target: "guest_agent::rpc", "host version mismatch: expected {} got {}", VERSION, version);
     }
 
+    if HANDSHAKE_DONE
+        .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
+        .is_ok()
+    {
+        info!(target: "guest_agent::rpc", "first handshake from host");
+    }
+
     HandshakeResponse {
         guest_public_key: SERVER_PUBLIC_KEY.get().cloned().unwrap_or_default(),
         version: VERSION.to_string(),
@@ -50,6 +61,8 @@ fn snapshot_begin(
     deadline: String,
     request_id: String,
 ) -> Result<bool, String> {
+    let mut failures = Vec::new();
+
     for snap in snapshots.iter() {
         info!(
             target: "guest_agent::snapshot",
@@ -60,14 +73,22 @@ fn snapshot_begin(
             snap.mount_point,
         );
 
-        guest_agent::snapshot_hooks::begin(snap, deadline.clone())?;
+        if let Err(s) = guest_agent::snapshot_hooks::begin(snap, deadline.clone()) {
+            failures.push(s);
+        }
     }
 
-    Ok(true)
+    if !failures.is_empty() {
+        Err(failures.join(", "))
+    } else {
+        Ok(true)
+    }
 }
 
 #[guest_agent_macros::json_rpc_method]
 fn snapshot_commit(snapshots: Vec<Snapshot>, request_id: String) -> Result<bool, String> {
+    let mut failures = Vec::new();
+
     for snap in snapshots.iter() {
         info!(
             target: "guest_agent::snapshot",
@@ -75,10 +96,17 @@ fn snapshot_commit(snapshots: Vec<Snapshot>, request_id: String) -> Result<bool,
             snap.volume_id,
             snap.id,
         );
-        guest_agent::snapshot_hooks::commit(snap)?;
+
+        if let Err(s) = guest_agent::snapshot_hooks::commit(snap) {
+            failures.push(s);
+        }
     }
 
-    Ok(true)
+    if !failures.is_empty() {
+        Err(failures.join(", "))
+    } else {
+        Ok(true)
+    }
 }
 
 #[guest_agent_macros::json_rpc_method]
@@ -87,6 +115,8 @@ fn snapshot_completed(
     mode: String,
     request_id: String,
 ) -> Result<bool, String> {
+    let mut failures = Vec::new();
+
     for snap in snapshots.iter() {
         info!(
             target: "guest_agent::snapshot",
@@ -95,10 +125,17 @@ fn snapshot_completed(
             snap.id,
             snap.success.unwrap_or_default(),
         );
-        guest_agent::snapshot_hooks::completed(snap)?;
+
+        if let Err(s) = guest_agent::snapshot_hooks::completed(snap) {
+            failures.push(s);
+        }
     }
 
-    Ok(true)
+    if !failures.is_empty() {
+        Err(failures.join(", "))
+    } else {
+        Ok(true)
+    }
 }
 
 fn parse_error_reply() -> Vec<u8> {
