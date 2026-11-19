@@ -1,4 +1,7 @@
-use std::sync::OnceLock;
+use std::sync::{
+    OnceLock,
+    atomic::{AtomicBool, Ordering},
+};
 
 use guest_agent::{
     rpc_models::{Request, Response, RpcError},
@@ -12,6 +15,7 @@ mod zmq_server;
 
 static SERVER_PUBLIC_KEY: OnceLock<String> = OnceLock::new();
 static HOST_PUBLIC_KEY: OnceLock<String> = OnceLock::new();
+static HANDSHAKE_DONE: AtomicBool = AtomicBool::new(false);
 
 #[derive(serde::Serialize)]
 struct HandshakeResponse {
@@ -31,6 +35,13 @@ fn get_pub_key(host_public_key: String, version: String) -> HandshakeResponse {
 
     if version != VERSION {
         warn!(target: "guest_agent::rpc", "host version mismatch: expected {} got {}", VERSION, version);
+    }
+
+    if HANDSHAKE_DONE
+        .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
+        .is_ok()
+    {
+        info!(target: "guest_agent::rpc", "first handshake from host");
     }
 
     HandshakeResponse {
