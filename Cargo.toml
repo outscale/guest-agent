@@ -4,7 +4,6 @@ edition = "2024"
 authors = ["Outscale SAS <opensource@outscale.com>"]
 license = "BSD-3-Clause"
 repository = "https://github.com/outscale/guest-agent"
-homepage = "https://github.com/outscale/guest-agent"
 
 
 [workspace]
