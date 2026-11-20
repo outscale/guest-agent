@@ -18,7 +18,7 @@ serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.151", features = ["raw_value"] }
 log = "0.4"
 env_logger = "0.11"
-jiff = "0.2.37"
+jiff = "1.0.0"
 systemd-journal-logger = "2.2.2"
 
 [package.metadata.deb]
