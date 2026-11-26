@@ -11,6 +11,7 @@ use log::{debug, error, info, warn};
 use serde_json::Value;
 
 mod logger;
+mod prereq;
 mod zmq_server;
 
 static SERVER_PUBLIC_KEY: OnceLock<String> = OnceLock::new();
@@ -205,7 +206,13 @@ fn handle_rpc(payload: &[u8]) -> Option<Vec<u8>> {
 fn main() {
     logger::setup_logger();
 
-    info!(target: "guest_agent", "starting osc-agent-guest");
+    match prereq::check() {
+        Ok(_) => info!(target: "guest_agent", "starting osc-agent-guest"),
+        Err(e) => {
+            error!(target: "guest_agent", "pre-requ failed: {e}");
+            std::process::exit(1);
+        }
+    }
 
     let _ = guest_agent::registry::JsonRpcMethodRegistry::global();
     let keys = guest_agent::curve::load_or_create_agent_keys().expect("agent CURVE keys");
